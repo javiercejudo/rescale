@@ -1,2 +1,3 @@
 # rescale
-Feature scaling
+
+Rescale data

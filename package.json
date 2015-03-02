@@ -1,0 +1,33 @@
+{
+  "name": "rescale",
+  "version": "1.0.0",
+  "description": "Rescale data",
+  "main": "src/rescale.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/javiercejudo/rescale"
+  },
+  "keywords": [
+    "feature scaling",
+    "normalisation",
+    "normalization",
+    "scale",
+    "rescale"
+  ],
+  "author": "Javier Cejudo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/javiercejudo/rescale/issues"
+  },
+  "homepage": "https://github.com/javiercejudo/rescale",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-mocha": "^2.0.0",
+    "normalise": "^1.0.0",
+    "scale-normalised": "^1.0.0",
+    "should": "^5.0.0"
+  }
+}
