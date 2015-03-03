@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>Test</title>
+  </head>
+  <body style='display: none;'>
+    <p>
+      <input type="number" id="x" value='7.5'>
+      x
+    </p>
+
+    <p>
+      <input type="number" id="oldScaleMin" value='0'>
+      <input type="number" id="oldScaleMax" value='10'>
+      old scale
+    </p>
+
+    <p>
+      <input type="number" id="newScaleMin" value='-1'>
+      <input type="number" id="newScaleMax" value='1'>
+      new scale
+    </p>
+
+    <p>
+      rescale(<span id="x-view"></span>,
+      [<span id="oldScaleMin-view"></span>, <span id="oldScaleMax-view"></span>],
+      [<span id="newScaleMin-view"></span>, <span id="newScaleMax-view"></span>])
+      =
+      <span id="result"></span>
+    </p>
+
+    <script src="bundle.js"></script>
+    <script>
+      var
+        rescale = require('rescale'),
+        elts = document.querySelectorAll('[type=number]'),
+        i;
+
+      for (i = 0; i < elts.length; i += 1) {
+        elts[i].addEventListener('input', updateResult);
+        elts[i].setAttribute('min', Number.MIN_SAFE_INTEGER || -9007199254740991);
+        elts[i].setAttribute('max', Number.MAX_SAFE_INTEGER || 9007199254740991);
+        elts[i].setAttribute('step', .25);
+      }
+
+      function getValue(id) {
+        var value = parseFloat(document.getElementById(id).value);
+        document.getElementById(id + '-view').innerHTML = value;
+
+        return value;
+      }
+
+      function updateResult() {
+        document.getElementById('result').innerHTML = rescale(
+          getValue('x'),
+          [getValue('oldScaleMin'), getValue('oldScaleMax')],
+          [getValue('newScaleMin'), getValue('newScaleMax')]
+        );
+      }
+
+      updateResult();
+      document.getElementsByTagName('body')[0].style.display = '';
+    </script>
+  </body>
+</html>
