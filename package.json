@@ -1,6 +1,6 @@
 {
   "name": "rescale",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Rescale data",
   "main": "src/rescale.js",
   "scripts": {
