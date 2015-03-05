@@ -1,3 +1,5 @@
+'use strict';
+
 var should = require('should');
 var sinon = require('sinon');
 var normalise = require('normalise');
@@ -7,7 +9,10 @@ var rescale = require('../src/rescale.js').rescale;
 describe('rescaling', function() {
   describe('without scales', function() {
     beforeEach(function() {
-      sinon.stub(normalise, 'normalise').returns(Math.E);
+      sinon.stub(normalise, 'normalise')
+        .withArgs('anything')
+        .onFirstCall().returns(Math.E)
+        .onSecondCall().returns(-4);
     });
 
     afterEach(function() {
@@ -16,12 +21,16 @@ describe('rescaling', function() {
 
     it('should delegate to normalise', function() {
       rescale('anything').should.be.exactly(Math.E);
+      rescale('anything').should.be.exactly(-4);
     });
   });
 
-  describe('without a new scales', function() {
+  describe('without a new scale', function() {
     beforeEach(function() {
-      sinon.stub(normalise, 'normalise').returns(Math.PI);
+      sinon.stub(normalise, 'normalise')
+        .withArgs('anything', [0, 10])
+        .onFirstCall().returns(Math.PI)
+        .onSecondCall().returns(34);
     });
 
     afterEach(function() {
@@ -30,6 +39,7 @@ describe('rescaling', function() {
 
     it('should also delegate to normalise', function() {
       rescale('anything', [0, 10]).should.be.exactly(Math.PI);
+      rescale('anything', [0, 10]).should.be.exactly(34);
     });
   });
 
@@ -39,19 +49,24 @@ describe('rescaling', function() {
     beforeEach(function() {
       normaliseMock = sinon.mock(normalise);
       normaliseMock.expects('normalise')
-        .withExactArgs('anything', [0, 100])
+        .twice().withExactArgs('anything', [0, 100])
         .returns(21);
 
       scaleMock = sinon.mock(scale);
       scaleMock.expects('scale')
-        .withExactArgs(21, [32, 212])
-        .returns(5);
+        .twice().withExactArgs(21, [32, 212])
+        .onFirstCall().returns(5)
+        .onSecondCall().returns(-1);
+    });
+
+    afterEach(function() {
+      scaleMock.verify();
+      normaliseMock.verify();
     });
 
     it('should compose normalise and scale', function() {
       rescale('anything', [0, 100], [32, 212]).should.be.exactly(5);
-      scaleMock.verify();
-      normaliseMock.verify();
+      rescale('anything', [0, 100], [32, 212]).should.be.exactly(-1);
     });
   });
 });
