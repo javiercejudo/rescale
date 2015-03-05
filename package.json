@@ -1,6 +1,6 @@
 {
   "name": "rescale",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Rescale data",
   "main": "src/rescale.js",
   "scripts": {
@@ -26,10 +26,11 @@
   "devDependencies": {
     "gulp": "^3.8.11",
     "gulp-mocha": "^2.0.0",
-    "should": "^5.0.0"
+    "should": "^5.0.0",
+    "sinon": "^1.13.0"
   },
   "dependencies": {
-    "normalise": "~1.0.1",
-    "scale-normalised": "~1.0.1"
+    "normalise": "~2.0.0",
+    "scale-normalised": "~2.0.0"
   }
 }

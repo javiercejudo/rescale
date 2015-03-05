@@ -3,12 +3,10 @@
 var normalise = require('normalise');
 var scale = require('scale-normalised');
 
-function rescale(x, oldScale, newScale) {
+exports.rescale = function rescale(x, oldScale, newScale) {
   if (typeof newScale === 'undefined') {
-    return normalise(x, oldScale);
+    return normalise.normalise(x, oldScale);
   }
 
-  return scale(normalise(x, oldScale), newScale);
+  return scale.scale(normalise.normalise(x, oldScale), newScale);
 }
-
-module.exports = rescale;

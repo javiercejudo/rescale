@@ -1,14 +1,55 @@
 var should = require('should');
-var rescale = require('../src/rescale.js');
+var sinon = require('sinon');
+var normalise = require('normalise');
+var scale = require('scale-normalised');
+var rescale = require('../src/rescale.js').rescale;
 
-describe('Rescale', function() {
-  it('should rescale data to the provided scale', function() {
-    rescale(2.5, [0, 5], [2, 4]).should.be.exactly(3);
-    rescale(-1, [-3, 5], [10, 20]).should.be.exactly(12.5);
+describe('rescaling', function() {
+  describe('without scales', function() {
+    beforeEach(function() {
+      sinon.stub(normalise, 'normalise').returns(Math.E);
+    });
+
+    afterEach(function() {
+      normalise.normalise.restore();
+    });
+
+    it('should delegate to normalise', function() {
+      rescale('anything').should.be.exactly(Math.E);
+    });
   });
 
-  it('should assume [0, 1] when no new scale is provided', function() {
-    rescale(2.5, [0, 5]).should.be.exactly(.5);
-    rescale(-1, [-3, 5]).should.be.exactly(.25);
+  describe('without a new scales', function() {
+    beforeEach(function() {
+      sinon.stub(normalise, 'normalise').returns(Math.PI);
+    });
+
+    afterEach(function() {
+      normalise.normalise.restore();
+    });
+
+    it('should also delegate to normalise', function() {
+      rescale('anything', [0, 10]).should.be.exactly(Math.PI);
+    });
+  });
+
+  describe('with scales', function() {
+    var scaleMock;
+
+    beforeEach(function() {
+      sinon.stub(normalise, 'normalise').returns(21);
+      scaleMock = sinon.mock(scale);
+      scaleMock.expects('scale').withExactArgs(21, [32, 212]);
+    });
+
+    afterEach(function() {
+      scaleMock.verify();
+      scaleMock.restore();
+      normalise.normalise.restore();
+    });
+
+    it('should compose normalise and scale', function() {
+      rescale('anything', 'random', [32, 212]);
+    });
   });
 });
