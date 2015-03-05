@@ -48,14 +48,10 @@ describe('rescaling', function() {
         .returns(5);
     });
 
-    afterEach(function() {
-      scaleMock.verify();
-      scaleMock.restore();
-      normalise.normalise.restore();
-    });
-
     it('should compose normalise and scale', function() {
       rescale('anything', [0, 100], [32, 212]).should.be.exactly(5);
+      scaleMock.verify();
+      normaliseMock.verify();
     });
   });
 });
