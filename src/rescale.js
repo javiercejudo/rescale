@@ -1,3 +1,5 @@
+/*jshint node:true */
+
 'use strict';
 
 var normalise = require('normalise');
@@ -9,4 +11,4 @@ exports.rescale = function rescale(x, oldScale, newScale) {
   }
 
   return scale.scale(normalise.normalise(x, oldScale), newScale);
-}
+};

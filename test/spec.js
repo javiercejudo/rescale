@@ -1,3 +1,5 @@
+/*jshint node:true, mocha:true */
+
 'use strict';
 
 var should = require('should');
