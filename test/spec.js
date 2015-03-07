@@ -10,15 +10,18 @@ var rescale = require('../src/rescale.js').rescale;
 
 describe('rescaling', function() {
   describe('without scales', function() {
+    var normaliseStub;
+
     beforeEach(function() {
-      sinon.stub(normalise, 'normalise')
-        .withArgs('anything')
+      normaliseStub = sinon.stub(normalise, 'normalise');
+
+      normaliseStub.withArgs('anything')
         .onFirstCall().returns(Math.E)
         .onSecondCall().returns(-4);
     });
 
     afterEach(function() {
-      normalise.normalise.restore();
+      normaliseStub.restore();
     });
 
     it('should delegate to normalise', function() {
@@ -28,15 +31,18 @@ describe('rescaling', function() {
   });
 
   describe('without a new scale', function() {
+    var normaliseStub;
+
     beforeEach(function() {
-      sinon.stub(normalise, 'normalise')
-        .withArgs('anything', [0, 10])
+      normaliseStub = sinon.stub(normalise, 'normalise');
+
+      normaliseStub.withArgs('anything', [0, 10])
         .onFirstCall().returns(Math.PI)
         .onSecondCall().returns(34);
     });
 
     afterEach(function() {
-      normalise.normalise.restore();
+      normaliseStub.restore();
     });
 
     it('should also delegate to normalise', function() {
