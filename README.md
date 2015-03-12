@@ -1,6 +1,8 @@
 # rescale
 
 [![Build Status](https://travis-ci.org/javiercejudo/rescale.svg)](https://travis-ci.org/javiercejudo/rescale)
+[![Coverage Status](https://coveralls.io/repos/javiercejudo/rescale/badge.svg?branch=master)](https://coveralls.io/r/javiercejudo/rescale?branch=master)
+[![Code Climate](https://codeclimate.com/github/javiercejudo/rescale/badges/gpa.svg)](https://codeclimate.com/github/javiercejudo/rescale)
 
 Rescale data
 
