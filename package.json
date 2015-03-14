@@ -33,7 +33,7 @@
     "sinon": "^1.13.0"
   },
   "dependencies": {
-    "normalise": "~2.0.0",
-    "scale-normalised": "~2.0.0"
+    "normalise": "^2.1.0",
+    "scale-normalised": "^2.1.0"
   }
 }
