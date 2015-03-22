@@ -27,3 +27,10 @@ rescale(-3, 'invalid scale', 'invalid scale'); // => RescaleError
 See the [playground](http://blog.javiercejudo.com/rescale/).
 
 See [spec](test/spec.js).
+
+## Related projects
+
+- [linear-converter](https://github.com/javiercejudo/linear-converter): flexible linear converter with built in conversions for common units.
+- [scale](https://github.com/javiercejudo/scale): scales normalised data.
+- [normalise](https://github.com/javiercejudo/normalise): normalise data to [0, 1].
+- [rescale-util](https://github.com/javiercejudo/rescale-util): rescale utilities.
