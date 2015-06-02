@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/javiercejudo/rescale",
   "devDependencies": {
+    "big.js": "^3.0.2",
     "gulp": "^3.8.11",
     "gulp-coveralls": "^0.1.3",
     "gulp-istanbul": "^0.6.0",
@@ -34,6 +35,7 @@
   },
   "dependencies": {
     "normalise": "^4.0.0",
+    "rescale-arbitrary-precision": "^1.0.1",
     "scale-normalised": "^4.0.0"
   }
 }

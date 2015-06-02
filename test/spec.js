@@ -6,6 +6,7 @@ var should = require('should');
 var sinon = require('sinon');
 var normalise = require('normalise');
 var scale = require('scale-normalised');
+var arbitraryPrecision = require('rescale-arbitrary-precision');
 var rescale = require('../src/rescale.js').rescale;
 
 describe('rescaling', function() {
@@ -52,29 +53,52 @@ describe('rescaling', function() {
   });
 
   describe('with scales', function() {
-    var scaleMock, normaliseMock;
+    describe('when big.js is unavailable', function() {
+      var scaleMock, normaliseMock, hasArbitraryPrecisionStub;
 
-    beforeEach(function() {
-      normaliseMock = sinon.mock(normalise);
-      normaliseMock.expects('normalise')
-        .twice().withExactArgs('anything', [0, 100])
-        .returns(21);
+      beforeEach(function() {
+        normaliseMock = sinon.mock(normalise);
+        normaliseMock.expects('normalise')
+          .twice().withExactArgs('anything', [0, 100])
+          .returns(21);
 
-      scaleMock = sinon.mock(scale);
-      scaleMock.expects('scale')
-        .twice().withExactArgs(21, [32, 212])
-        .onFirstCall().returns(5)
-        .onSecondCall().returns(-1);
+        scaleMock = sinon.mock(scale);
+        scaleMock.expects('scale')
+          .twice().withExactArgs(21, [32, 212])
+          .onFirstCall().returns(5)
+          .onSecondCall().returns(-1);
+
+        hasArbitraryPrecisionStub = sinon.stub(arbitraryPrecision, 'isAvailable');
+        hasArbitraryPrecisionStub.returns(false);
+      });
+
+      afterEach(function() {
+        scaleMock.verify();
+        normaliseMock.verify();
+        hasArbitraryPrecisionStub.restore();
+      });
+
+      it('should compose normalise and scale', function() {
+        rescale('anything', [0, 100], [32, 212]).should.be.exactly(5);
+        rescale('anything', [0, 100], [32, 212]).should.be.exactly(-1);
+      });
     });
 
-    afterEach(function() {
-      scaleMock.verify();
-      normaliseMock.verify();
-    });
+    describe('when big.js is available', function() {
+      var hasArbitraryPrecisionStub;
 
-    it('should compose normalise and scale', function() {
-      rescale('anything', [0, 100], [32, 212]).should.be.exactly(5);
-      rescale('anything', [0, 100], [32, 212]).should.be.exactly(-1);
+      beforeEach(function() {
+        hasArbitraryPrecisionStub = sinon.stub(arbitraryPrecision, 'isAvailable');
+        hasArbitraryPrecisionStub.returns(true);
+      });
+
+      afterEach(function() {
+        hasArbitraryPrecisionStub.restore();
+      });
+
+      it('should rescale with arbitrary precision', function() {
+        rescale(-2, [0, 3], [0, -9]).should.be.exactly(6);
+      });
     });
   });
 });
