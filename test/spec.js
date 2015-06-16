@@ -7,7 +7,7 @@ var sinon = require('sinon');
 var normalise = require('normalise');
 var scale = require('scale-normalised');
 var arbitraryPrecision = require('rescale-arbitrary-precision');
-var rescale = require('../src/rescale.js').rescale;
+var rescale = require('../src/rescale').rescale;
 
 describe('rescaling', function() {
   describe('without scales', function() {
