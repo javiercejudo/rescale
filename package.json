@@ -34,8 +34,8 @@
     "sinon": "^1.13.0"
   },
   "dependencies": {
-    "normalise": "^4.0.0",
+    "normalise": "^5.0.0",
     "rescale-arbitrary-precision": "^1.0.1",
-    "scale-normalised": "^4.0.0"
+    "scale-normalised": "^5.0.0"
   }
 }
