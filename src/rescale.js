@@ -6,7 +6,7 @@ var normalise = require('normalise');
 var scale = require('scale-normalised');
 var arbitraryPrecision = require('rescale-arbitrary-precision');
 
-var decimal = arbitraryPrecision.load();
+var Decimal = arbitraryPrecision.load();
 
 exports.rescale = function rescale(x, oldScale, newScale) {
   if (typeof newScale === 'undefined') {
@@ -25,12 +25,12 @@ function rescaleDecimal(x, oldScale, newScale) {
 }
 
 function normaliseDecimal(x, scale) {
-  return decimal(x).minus(scale[0])
-    .div(decimal(scale[1]).minus(scale[0]));
+  return new Decimal(x).minus(scale[0])
+    .div(new Decimal(scale[1]).minus(scale[0]));
 }
 
 function scaleDecimal(x, scale) {
-  return decimal(scale[1]).minus(scale[0]).times(x).plus(scale[0]);
+  return new Decimal(scale[1]).minus(scale[0]).times(x).plus(scale[0]);
 }
 
 function rescaleNative(x, oldScale, newScale) {

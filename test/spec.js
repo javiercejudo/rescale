@@ -2,9 +2,10 @@
 
 'use strict';
 
+var decimalDep = process.env.DECIMAL ? process.env.DECIMAL : 'big.js';
+
 var should = require('should');
 var sinon = require('sinon');
-var big = require('big.js');
 var normalise = require('normalise');
 var scale = require('scale-normalised');
 var arbitraryPrecision = require('rescale-arbitrary-precision');
@@ -54,7 +55,7 @@ describe('rescaling', function() {
   });
 
   describe('with scales', function() {
-    describe('when big.js is unavailable', function() {
+    describe('when ' + decimalDep + ' is unavailable', function() {
       var scaleMock, normaliseMock, hasArbitraryPrecisionStub;
 
       beforeEach(function() {
@@ -85,7 +86,7 @@ describe('rescaling', function() {
       });
     });
 
-    describe('when big.js is available', function() {
+    describe('when ' + decimalDep + ' is available', function() {
       var hasArbitraryPrecisionStub;
 
       beforeEach(function() {
@@ -99,14 +100,6 @@ describe('rescaling', function() {
 
       it('should rescale with arbitrary precision', function() {
         rescale(-2, [0, 3], [0, -9]).should.be.exactly(6);
-
-        // the default precision is 20 (see http://mikemcl.github.io/big.js/#dp)
-        rescale(1e-24, [0, 1], [0, 1e24]).should.not.be.exactly(1);
-
-        var defaultDP = big.DP;
-        big.DP = 24;
-        rescale(1e-24, [0, 1], [0, 1e24]).should.be.exactly(1);
-        big.DP = defaultDP;
       });
     });
   });
