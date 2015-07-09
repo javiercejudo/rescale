@@ -2,104 +2,45 @@
 
 'use strict';
 
-var decimalDep = process.env.DECIMAL ? process.env.DECIMAL : 'big.js';
+require('should');
 
-var should = require('should');
-var sinon = require('sinon');
-var normalise = require('normalise');
-var scale = require('scale-normalised');
-var arbitraryPrecision = require('rescale-arbitrary-precision');
-var rescale = require('../src/rescale').rescale;
+var rescaleFactory = require('../src/rescale');
+var bigjsAdapter = require('bigjs-adapter');
+var floatingAdapter = require('floating-adapter');
 
 describe('rescaling', function() {
   describe('without scales', function() {
-    var normaliseStub;
+    var rescale = rescaleFactory(floatingAdapter).rescale;
 
-    beforeEach(function() {
-      normaliseStub = sinon.stub(normalise, 'normalise');
-
-      normaliseStub.withArgs('anything')
-        .onFirstCall().returns(Math.E)
-        .onSecondCall().returns(-4);
-    });
-
-    afterEach(function() {
-      normaliseStub.restore();
-    });
-
-    it('should delegate to normalise', function() {
-      rescale('anything').should.be.exactly(Math.E);
-      rescale('anything').should.be.exactly(-4);
+    it('should be the identity', function() {
+      rescale(Math.E).should.be.exactly(Math.E);
+      rescale(-4).should.be.exactly(-4);
     });
   });
 
   describe('without a new scale', function() {
-    var normaliseStub;
-
-    beforeEach(function() {
-      normaliseStub = sinon.stub(normalise, 'normalise');
-
-      normaliseStub.withArgs('anything', [0, 10])
-        .onFirstCall().returns(Math.PI)
-        .onSecondCall().returns(34);
-    });
-
-    afterEach(function() {
-      normaliseStub.restore();
-    });
+    var rescale = rescaleFactory(floatingAdapter).rescale;
 
     it('should also delegate to normalise', function() {
-      rescale('anything', [0, 10]).should.be.exactly(Math.PI);
-      rescale('anything', [0, 10]).should.be.exactly(34);
+      rescale(0.4, [0.3, 0.5]).should.be.exactly(0.5000000000000001);
+      rescale(-3, [-5, 1]).should.be.exactly(1/3);
     });
   });
 
   describe('with scales', function() {
-    describe('when ' + decimalDep + ' is unavailable', function() {
-      var scaleMock, normaliseMock, hasArbitraryPrecisionStub;
-
-      beforeEach(function() {
-        normaliseMock = sinon.mock(normalise);
-        normaliseMock.expects('normalise')
-          .twice().withExactArgs('anything', [0, 100])
-          .returns(21);
-
-        scaleMock = sinon.mock(scale);
-        scaleMock.expects('scale')
-          .twice().withExactArgs(21, [32, 212])
-          .onFirstCall().returns(5)
-          .onSecondCall().returns(-1);
-
-        hasArbitraryPrecisionStub = sinon.stub(arbitraryPrecision, 'isAvailable');
-        hasArbitraryPrecisionStub.returns(false);
-      });
-
-      afterEach(function() {
-        scaleMock.verify();
-        normaliseMock.verify();
-        hasArbitraryPrecisionStub.restore();
-      });
+    describe('when arbitrary precision is unavailable', function() {
+      var rescale = rescaleFactory(floatingAdapter).rescale;
 
       it('should compose normalise and scale', function() {
-        rescale('anything', [0, 100], [32, 212]).should.be.exactly(5);
-        rescale('anything', [0, 100], [32, 212]).should.be.exactly(-1);
+        rescale(0.4, [0.3, 0.5], [0.1, 0.2]).should.be.exactly(0.15000000000000002);
       });
     });
 
-    describe('when ' + decimalDep + ' is available', function() {
-      var hasArbitraryPrecisionStub;
-
-      beforeEach(function() {
-        hasArbitraryPrecisionStub = sinon.stub(arbitraryPrecision, 'isAvailable');
-        hasArbitraryPrecisionStub.returns(true);
-      });
-
-      afterEach(function() {
-        hasArbitraryPrecisionStub.restore();
-      });
+    describe('when arbitrary precision is available', function() {
+      var rescale = rescaleFactory(bigjsAdapter).rescale;
 
       it('should rescale with arbitrary precision', function() {
-        rescale(-2, [0, 3], [0, -9]).should.be.exactly(6);
+        rescale(0.4, [0.3, 0.5], [0.1, 0.2]).should.be.exactly(0.15);
       });
     });
   });
