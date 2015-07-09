@@ -2,37 +2,40 @@
 
 'use strict';
 
-var normalise = require('normalise');
-var scale = require('scale-normalised');
-var arbitraryPrecision = require('rescale-arbitrary-precision');
+var arbitraryPrecision = require('linear-arbitrary-precision');
+var isUndefined = require('lodash.isundefined');
 
-var Decimal = arbitraryPrecision.load();
+module.exports = function factory(adapter) {
+  var Decimal = arbitraryPrecision(adapter);
+  var normalise = require('normalise')(adapter);
+  var scale = require('scale-normalised')(adapter);
+  var api = {};
 
-exports.rescale = function rescale(x, oldScale, newScale) {
-  if (typeof newScale === 'undefined') {
-    return normalise.normalise(x, oldScale);
-  }
+  api.rescale = function rescale(x, oldScale, newScale) {
+    if (isUndefined(newScale)) {
+      return normalise.normalise(x, oldScale);
+    }
 
-  if (arbitraryPrecision.isAvailable()) {
     return Number(rescaleDecimal(x, oldScale, newScale));
+  };
+
+  function rescaleDecimal(x, oldScale, newScale) {
+    return scaleDecimal(normaliseDecimal(x, oldScale), newScale);
   }
 
-  return rescaleNative(x, oldScale, newScale);
+  function normaliseDecimal(x, scale) {
+    var scale0 = new Decimal(scale[0].toString());
+
+    return new Decimal(x.toString()).minus(scale0)
+      .div(new Decimal(scale[1].toString()).minus(scale0));
+  }
+
+  function scaleDecimal(x, scale) {
+    var scale0 = new Decimal(scale[0].toString());
+
+    return new Decimal(scale[1].toString()).minus(scale0)
+      .times(new Decimal(x.toString())).plus(scale0);
+  }
+
+  return api;
 };
-
-function rescaleDecimal(x, oldScale, newScale) {
-  return scaleDecimal(normaliseDecimal(x, oldScale), newScale);
-}
-
-function normaliseDecimal(x, scale) {
-  return new Decimal(x).minus(scale[0])
-    .div(new Decimal(scale[1]).minus(scale[0]));
-}
-
-function scaleDecimal(x, scale) {
-  return new Decimal(scale[1]).minus(scale[0]).times(x).plus(scale[0]);
-}
-
-function rescaleNative(x, oldScale, newScale) {
-  return scale.scale(normalise.normalise(x, oldScale), newScale);
-}
