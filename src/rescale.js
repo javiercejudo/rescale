@@ -16,12 +16,8 @@ module.exports = function factory(adapter) {
       return normalise.normalise(x, oldScale);
     }
 
-    return Number(rescaleDecimal(x, oldScale, newScale));
+    return Number(scaleDecimal(normaliseDecimal(x, oldScale), newScale));
   };
-
-  function rescaleDecimal(x, oldScale, newScale) {
-    return scaleDecimal(normaliseDecimal(x, oldScale), newScale);
-  }
 
   function normaliseDecimal(x, scale) {
     var scale0 = new Decimal(scale[0].toString());
