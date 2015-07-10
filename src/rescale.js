@@ -4,34 +4,26 @@
 
 var arbitraryPrecision = require('linear-arbitrary-precision');
 var isUndefined = require('lodash.isundefined');
+var normaliseFactory = require('normalise');
 
 module.exports = function factory(adapter) {
   var Decimal = arbitraryPrecision(adapter);
-  var normalise = require('normalise')(adapter);
-  var scale = require('scale-normalised')(adapter);
+  var normalise = normaliseFactory(adapter).normalise;
   var api = {};
 
   api.rescale = function rescale(x, oldScale, newScale) {
     if (isUndefined(newScale)) {
-      return normalise.normalise(x, oldScale);
+      return normalise(x, oldScale);
     }
 
-    return Number(scaleDecimal(normaliseDecimal(x, oldScale), newScale));
+    var newScale0 = new Decimal(newScale[0].toString());
+    var oldScale0 = new Decimal(oldScale[0].toString());
+
+    return Number(
+      new Decimal(x.toString()).minus(oldScale0).times(new Decimal(newScale[1].toString()).minus(newScale0))
+        .div(new Decimal(oldScale[1].toString()).minus(oldScale0)).plus(newScale0)
+    );
   };
-
-  function normaliseDecimal(x, scale) {
-    var scale0 = new Decimal(scale[0].toString());
-
-    return new Decimal(x.toString()).minus(scale0)
-      .div(new Decimal(scale[1].toString()).minus(scale0));
-  }
-
-  function scaleDecimal(x, scale) {
-    var scale0 = new Decimal(scale[0].toString());
-
-    return new Decimal(scale[1].toString()).minus(scale0)
-      .times(new Decimal(x.toString())).plus(scale0);
-  }
 
   return api;
 };

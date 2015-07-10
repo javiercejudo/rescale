@@ -36,7 +36,6 @@
   "dependencies": {
     "linear-arbitrary-precision": "^3.0.2",
     "lodash.isundefined": "^3.0.1",
-    "normalise": "^6.0.0",
-    "scale-normalised": "^6.0.0"
+    "normalise": "^6.0.0"
   }
 }
