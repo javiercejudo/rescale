@@ -13,13 +13,14 @@ Rescale data
 ## Usage
 
 ```js
-var rescale = require('rescale')(require('floating-adapter')).rescale;
+var Decimal = require('linear-arbitrary-precision')(require('floating-adapter'));
+var rescale = require('rescale')(Decimal).rescale;
 
-rescale(-1); // => -1
-rescale(2.5, [0, 5]); // => 0.5 as [0, 1] is the default new scale
+rescale(-1); // => Decimal -1
+rescale(2.5, [0, 5]); // => Decimal 0.5 as [0, 1] is the default new scale
 
-rescale(-1, [-3, 5], [10, 20]); // => 12.5
-rescale(40, [0, 100], [32, 212]); // => 104
+rescale(-1, [-3, 5], [10, 20]); // => Decimal 12.5
+rescale(40, [0, 100], [32, 212]); // => Decimal 104
 ```
 
 See [spec](test/spec.js).
