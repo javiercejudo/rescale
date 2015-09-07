@@ -12,10 +12,6 @@ module.exports = function factory(Decimal) {
   var api = {};
 
   api.rescale = function rescale(x, oldScale, newScale) {
-    if (isUndefined(newScale)) {
-      return normalise(x, oldScale);
-    }
-
     return scale(normalise(x, oldScale), newScale);
   };
 
