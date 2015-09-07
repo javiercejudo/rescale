@@ -5,7 +5,7 @@
 require('should');
 
 
-var arbitraryPrecision = require('linear-arbitrary-precision');
+var arbitraryPrecision = require('arbitrary-precision');
 var bigjsAdapter = require('bigjs-adapter');
 var floatingAdapter = require('floating-adapter');
 var rescaleFactory = require('../src/rescale');
@@ -16,8 +16,8 @@ describe('rescaling', function() {
     var rescale = rescaleFactory(Decimal).rescale;
 
     it('should be the identity', function() {
-      rescale(Math.E).val().val().should.be.exactly(Math.E);
-      rescale(-4).val().val().should.be.exactly(-4);
+      rescale(Math.E).equals(new Decimal(Math.E.toString())).should.be.exactly(true);
+      rescale(-4).equals(new Decimal('-4')).should.be.exactly(true);
     });
   });
 
@@ -26,8 +26,8 @@ describe('rescaling', function() {
     var rescale = rescaleFactory(Decimal).rescale;
 
     it('should also delegate to normalise', function() {
-      rescale(0.4, [0.3, 0.5]).val().val().should.be.exactly(0.5000000000000001);
-      rescale(-3, [-5, 1]).val().val().should.be.exactly(1/3);
+      rescale(0.4, [0.3, 0.5]).equals(new Decimal('0.5000000000000001')).should.be.exactly(true);
+      rescale(-3, [-5, 1]).equals(new Decimal('1').div(new Decimal('3'))).should.be.exactly(true);
     });
   });
 
@@ -37,7 +37,7 @@ describe('rescaling', function() {
       var rescale = rescaleFactory(Decimal).rescale;
 
       it('should compose normalise and scale', function() {
-        rescale(0.4, [0.3, 0.5], [0.1, 0.2]).val().val().should.be.exactly(0.15000000000000002);
+        rescale(0.4, [0.3, 0.5], [0.1, 0.2]).equals(new Decimal('0.15000000000000002')).should.be.exactly(true);
       });
     });
 
@@ -46,7 +46,7 @@ describe('rescaling', function() {
       var rescale = rescaleFactory(Decimal).rescale;
 
       it('should rescale with arbitrary precision', function() {
-        rescale(0.4, [0.3, 0.5], [0.1, 0.2]).val().eq(new Decimal('0.15')).should.be.exactly(true);
+        rescale(0.4, [0.3, 0.5], [0.1, 0.2]).equals(new Decimal('0.15')).should.be.exactly(true);
       });
     });
   });
