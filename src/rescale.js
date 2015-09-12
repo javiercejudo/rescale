@@ -2,7 +2,6 @@
 
 'use strict';
 
-var isUndefined = require('lodash.isundefined');
 var normaliseFactory = require('normalise');
 var scaleFactory = require('scale-normalised');
 
@@ -11,8 +10,8 @@ module.exports = function factory(Decimal) {
   var scale = scaleFactory(Decimal).scale;
   var api = {};
 
-  api.rescale = function rescale(x, oldScale, newScale) {
-    return scale(normalise(x, oldScale), newScale);
+  api.rescale = function rescale(oldScale, newScale, x) {
+    return scale(newScale, normalise(oldScale, x));
   };
 
   return api;
