@@ -16,8 +16,8 @@ Rescale data
 var Decimal = require('linear-arbitrary-precision')(require('floating-adapter'));
 var rescale = require('rescale')(Decimal).rescale;
 
-rescale(-1, [-3, 5], [10, 20]); // => Decimal 12.5
-rescale(40, [0, 100], [32, 212]); // => Decimal 104
+rescale([-3, 5], [10, 20], -1); // => Decimal 12.5
+rescale([0, 100], [32, 212], 40); // => Decimal 104
 ```
 
 See [spec](test/spec.js).
