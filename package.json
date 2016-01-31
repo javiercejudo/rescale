@@ -36,6 +36,6 @@
   },
   "dependencies": {
     "normalise": "^8.0.1",
-    "scale-normalised": "^9.0.0"
+    "scale-normalised": "^10.0.0"
   }
 }
