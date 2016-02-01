@@ -35,7 +35,7 @@
     "should": "^8.0.0"
   },
   "dependencies": {
-    "normalise": "^8.0.1",
+    "normalise": "^10.0.0",
     "scale-normalised": "^10.0.0"
   }
 }
