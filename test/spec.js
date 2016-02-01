@@ -11,6 +11,17 @@ var floatingAdapter = require('floating-adapter');
 var rescaleFactory = require('../src/rescale');
 
 describe('rescaling', function() {
+  describe('api', function() {
+    it('should be frozen', function() {
+      var Decimal = arbitraryPrecision(floatingAdapter);
+      var rescale = rescaleFactory(Decimal);
+
+      (function() {
+        rescale.rescale = function() {};
+      }).should.throw();
+    });
+  });
+
   describe('with scales', function() {
     describe('when arbitrary precision is unavailable', function() {
       var Decimal = arbitraryPrecision(floatingAdapter);
